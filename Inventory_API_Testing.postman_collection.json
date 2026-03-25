@@ -1,0 +1,159 @@
+{
+  "info": {
+    "name": "Inventory Management API",
+    "description": "Test API cho Inventory Management System",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "1️⃣ CREATE PRODUCT (Auto-create Inventory)",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"title\": \"Laptop Dell XPS 13\",\n  \"price\": 1200,\n  \"description\": \"High-performance laptop for professionals\",\n  \"images\": [\"https://i.imgur.com/laptop.jpeg\"],\n  \"category\": \"CATEGORY_ID_HERE\"\n}"
+        },
+        "url": {
+          "raw": "http://localhost:3000/api/v1/products",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "3000",
+          "path": ["api", "v1", "products"]
+        }
+      },
+      "description": "Tạo product mới → Inventory sẽ tự động được tạo\n\n**Lưu ý:** Thay CATEGORY_ID_HERE bằng ID category thực tế\n\n**Response:** Sẽ nhận được product ID - lưu lại để dùng các bước tiếp theo"
+    },
+    {
+      "name": "2️⃣ GET ALL INVENTORIES",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:3000/api/v1/inventories",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "3000",
+          "path": ["api", "v1", "inventories"]
+        }
+      },
+      "description": "Lấy tất cả inventory (có join dữ liệu product)"
+    },
+    {
+      "name": "3️⃣ GET INVENTORY BY ID (Join Product)",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:3000/api/v1/inventories/INVENTORY_ID_HERE",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "3000",
+          "path": ["api", "v1", "inventories", "INVENTORY_ID_HERE"]
+        }
+      },
+      "description": "Lấy inventory theo ID (kèm thông tin product)\n\n**Lưu ý:** Thay INVENTORY_ID_HERE bằng ID inventory từ bước 2"
+    },
+    {
+      "name": "4️⃣ ADD STOCK (Tăng stock)",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"product\": \"PRODUCT_ID_HERE\",\n  \"quantity\": 50\n}"
+        },
+        "url": {
+          "raw": "http://localhost:3000/api/v1/inventories/add-stock",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "3000",
+          "path": ["api", "v1", "inventories", "add-stock"]
+        }
+      },
+      "description": "Tăng stock tương ứng với quantity\n\n**Lưu ý:** Thay PRODUCT_ID_HERE bằng product ID từ bước 1\n\n**Kết quả:** stock = 50"
+    },
+    {
+      "name": "5️⃣ REMOVE STOCK (Giảm stock)",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"product\": \"PRODUCT_ID_HERE\",\n  \"quantity\": 10\n}"
+        },
+        "url": {
+          "raw": "http://localhost:3000/api/v1/inventories/remove-stock",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "3000",
+          "path": ["api", "v1", "inventories", "remove-stock"]
+        }
+      },
+      "description": "Giảm stock tương ứng với quantity\n\n**Kết quả:** stock = 40 (50 - 10)"
+    },
+    {
+      "name": "6️⃣ RESERVATION (Đặt hàng - Giảm stock, tăng reserved)",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"product\": \"PRODUCT_ID_HERE\",\n  \"quantity\": 15\n}"
+        },
+        "url": {
+          "raw": "http://localhost:3000/api/v1/inventories/reservation",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "3000",
+          "path": ["api", "v1", "inventories", "reservation"]
+        }
+      },
+      "description": "Tạo reservation: giảm stock, tăng reserved\n\n**Kết quả:**\n- stock = 25 (40 - 15)\n- reserved = 15"
+    },
+    {
+      "name": "7️⃣ SOLD (Xác nhận bán - Giảm reserved, tăng soldCount)",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"product\": \"PRODUCT_ID_HERE\",\n  \"quantity\": 15\n}"
+        },
+        "url": {
+          "raw": "http://localhost:3000/api/v1/inventories/sold",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "3000",
+          "path": ["api", "v1", "inventories", "sold"]
+        }
+      },
+      "description": "Xác nhận bán: giảm reserved, tăng soldCount\n\n**Kết quả:**\n- reserved = 0 (15 - 15)\n- soldCount = 15"
+    }
+  ]
+}
